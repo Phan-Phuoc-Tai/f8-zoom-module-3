@@ -38,7 +38,7 @@ interface SidebarState {
     icon?: LucideIcon;
   }[];
 }
-export const useSidebarStore = create<SidebarState>()((set) => ({
+export const useSidebarStore = create<SidebarState>()(() => ({
   sidebarMenus: [
     {
       id: 1,

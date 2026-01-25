@@ -5,7 +5,7 @@ interface usePostStoreType {
   fetchNewsFeed: () => Promise<[]>;
   fetchExplore: () => Promise<[]>;
 }
-export const usePostStore = create<usePostStoreType>()((set) => ({
+export const usePostStore = create<usePostStoreType>()(() => ({
   fetchNewsFeed: async () => {
     const response = await HTTP.get(`/api/posts/feed`);
     const data = response.data;

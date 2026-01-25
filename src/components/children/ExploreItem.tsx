@@ -1,12 +1,6 @@
 import { use } from "react";
 import { Card, CardContent } from "../ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { PostsContext } from "../../contexts/PostsContext";
 
 export function ExploreItem() {
@@ -52,8 +46,6 @@ export function ExploreItem() {
           </div>
         </CarouselItem>
       </CarouselContent>
-      {/* <CarouselPrevious className="left-1 cursor-pointer size-6" />
-      <CarouselNext className="right-1 cursor-pointer size-6" /> */}
     </Carousel>
   );
 }
