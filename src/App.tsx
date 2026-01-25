@@ -1,9 +1,17 @@
+import { Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
+import HomePage from "./pages/HomePage";
+import ExplorePage from "./pages/ExplorePage";
 
 export default function App() {
   return (
-    <div>
-      <MainLayout />
-    </div>
+    <>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/explore" element={<ExplorePage />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
