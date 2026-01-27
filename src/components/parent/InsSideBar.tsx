@@ -23,17 +23,28 @@ import { useSidebarStore } from "../../stores/sidebarStore";
 import DropMenuSidebarMeta from "../children/DropMenuSidebarMeta";
 import { useState } from "react";
 import { SidebarContext } from "../../contexts/SidebarContext";
+import { useAuthStore } from "../../stores/authStore";
+import { Spinner } from "../ui/spinner";
+import SidebarProfile from "../children/SidebarProfile";
+import { NavLink } from "react-router-dom";
 
 export default function InsSideBar() {
   const { sidebarMenus, sidebarMores, sidebarMetas } = useSidebarStore();
   const [itemActive, setItemActive] = useState(1);
+  const { isLoading } = useAuthStore();
+
   return (
     <Sidebar
       collapsible="icon"
-      className="w-50 group-data-[collapsible=icon]:w-15 group-data-[side=left]:border-0"
+      className="w-50 group-data-[collapsible=icon]:w-15"
     >
       <SidebarHeader>
-        <SidebarTrigger className="cursor-pointer size-10 hover:bg-black/10" />
+        <NavLink
+          to={"/"}
+          className="h-15 w-30 flex items-center justify-center mx-auto mt-5"
+        >
+          <img src="/images/ins-logo.svg" />
+        </NavLink>
       </SidebarHeader>
       <SidebarContent className="justify-center">
         <SidebarGroup>
@@ -51,6 +62,14 @@ export default function InsSideBar() {
                   </SidebarContext.Provider>
                 </div>
               ))}
+
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <Spinner className="size-6" />
+                </div>
+              ) : (
+                <SidebarProfile />
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

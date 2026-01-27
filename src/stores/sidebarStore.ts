@@ -18,25 +18,17 @@ import {
 } from "lucide-react";
 import { create } from "zustand";
 import { type LucideIcon } from "lucide-react";
+
+type SidebarType = {
+  id: number;
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+}[];
 interface SidebarState {
-  sidebarMenus: {
-    id: number;
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-  }[];
-  sidebarMores: {
-    id: number;
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-  }[];
-  sidebarMetas: {
-    id: number;
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-  }[];
+  sidebarMenus: SidebarType;
+  sidebarMores: SidebarType;
+  sidebarMetas: SidebarType;
 }
 export const useSidebarStore = create<SidebarState>()(() => ({
   sidebarMenus: [

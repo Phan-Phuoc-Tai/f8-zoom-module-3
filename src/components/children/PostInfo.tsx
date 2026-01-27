@@ -12,6 +12,7 @@ export default function PostInfo() {
   const comments = context?.comments;
   const saveBy = context?.savedBy;
   const userId = context?.userId;
+
   return (
     <div>
       {/* Action */}
@@ -38,7 +39,7 @@ export default function PostInfo() {
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <p className="font-medium">{likes}</p>
+            <p className="font-medium">{likes && Math.abs(likes)}</p>
           </div>
 
           <div className="comment flex items-center">
@@ -62,7 +63,7 @@ export default function PostInfo() {
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <p className="font-medium">{comments}</p>
+            <p className="font-medium">{comments && Math.abs(comments)}</p>
           </div>
 
           <div className="share">

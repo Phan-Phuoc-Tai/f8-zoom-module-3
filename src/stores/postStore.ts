@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { HTTP } from "../tools/HTTP";
 
-interface usePostStoreType {
+interface PostStoreType {
   fetchNewsFeed: () => Promise<[]>;
   fetchExplore: () => Promise<[]>;
 }
-export const usePostStore = create<usePostStoreType>()(() => ({
+export const usePostStore = create<PostStoreType>()(() => ({
   fetchNewsFeed: async () => {
     const response = await HTTP.get(`/api/posts/feed`);
     const data = response.data;

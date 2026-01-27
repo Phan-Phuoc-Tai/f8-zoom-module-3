@@ -3,7 +3,7 @@ import { createContext } from "react";
 interface PostsContextType {
   caption: string;
   comments: number;
-  createAt: string;
+  createdAt: string | Date;
   image: string;
   isLiked: boolean;
   isSave: boolean;

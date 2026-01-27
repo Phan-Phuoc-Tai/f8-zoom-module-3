@@ -3,31 +3,33 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
-  ItemMedia,
   ItemTitle,
 } from "../ui/item";
 import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { PostsContext } from "../../contexts/PostsContext";
 import { use } from "react";
+import { formatTime } from "../../tools/formatTime";
 
 export function ItemAvatar() {
   const context = use(PostsContext);
   const userId = context?.userId;
+  const createdAt = context?.createdAt;
+
   return (
     <div className="flex w-full flex-col gap-6">
       <Item className="gap-3 p-0 pr-[10px] pl-[14px] pb-3">
-        <ItemMedia>
-          <Avatar className="size-10 rounded-full overflow-hidden">
-            <AvatarImage src="https://github.com/evilrabbit.png" />
-            <AvatarFallback>ER</AvatarFallback>
-          </Avatar>
-        </ItemMedia>
+        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-black font-medium">
+          <span>{userId?.username.charAt(0).toUpperCase()}</span>
+        </div>
         <ItemContent className="flex-row">
-          <ItemTitle>{userId?.username}</ItemTitle>
+          <ItemTitle>
+            {userId?.username ? userId?.username : "Tài khoản đã bị xoá"}
+          </ItemTitle>
           <span className="text-[#737373]">&bull;</span>
-          <ItemDescription>1 ngày</ItemDescription>
+          <ItemDescription>
+            {createdAt && formatTime(createdAt)}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
           <Button
