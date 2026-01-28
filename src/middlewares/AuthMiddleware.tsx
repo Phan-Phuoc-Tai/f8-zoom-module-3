@@ -1,5 +1,3 @@
-import React from "react";
-import { useAuthStore } from "../stores/authStore";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export default function AuthMiddleware() {

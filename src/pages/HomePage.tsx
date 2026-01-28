@@ -7,7 +7,6 @@ import LoadingPost from "../tools/LoadingPost";
 import { toast } from "sonner";
 import SuggestedUser from "../components/parent/SuggestedUser";
 import Footer from "../components/parent/Footer";
-import { useState } from "react";
 
 export default function HomePage() {
   const { fetchNewsFeed } = usePostStore();
