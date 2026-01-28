@@ -1,14 +1,14 @@
-import { Button } from "../ui/button";
-import { Field, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+import { Button } from "../../ui/button";
+import { Field, FieldGroup, FieldLabel } from "../../ui/field";
+import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "../../lib/utils";
+import { cn } from "../../../lib/utils";
 import { use, useEffect } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import { formRegisterSchema } from "../../schemas/formRegisterSchema";
-import { useAuthStore, type FormRegisterData } from "../../stores/authStore";
-import { Spinner } from "../ui/spinner";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { formRegisterSchema } from "../../../schemas/formRegisterSchema";
+import { useAuthStore, type FormRegisterData } from "../../../stores/authStore";
+import { Spinner } from "../../ui/spinner";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {

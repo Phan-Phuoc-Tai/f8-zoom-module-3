@@ -1,11 +1,13 @@
 import axios, {
-  type AxiosError,
   type AxiosInstance,
+  type AxiosError,
   type InternalAxiosRequestConfig,
 } from "axios";
 
+const baseURL = "https://instagram.f8team.dev";
+
 export const HTTP: AxiosInstance = axios.create({
-  baseURL: "https://instagram.f8team.dev",
+  baseURL,
 });
 
 HTTP.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -16,51 +18,82 @@ HTTP.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-let refreshTokenPromise: Promise<{
-  accessToken: string;
-  refreshToken: string;
-}> | null = null;
-const getNewToken = async () => {
-  try {
-    const refreshToken = localStorage.getItem("refresh_token");
-    const response = await HTTP.post(`/api/auth/refresh-token`, {
-      refreshToken,
-    }).catch((error) => {
-      throw error;
-    });
-    return response.data.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return false;
-    }
-  }
-};
-HTTP.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error: AxiosError) => {
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (!refreshToken) {
-      return Promise.reject(error);
-    }
-    const requestMissed = error.config as InternalAxiosRequestConfig;
-    if (error?.status === 401) {
-      if (!refreshTokenPromise) {
-        refreshTokenPromise = await getNewToken();
-      }
-      const newToken = await refreshTokenPromise;
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (error: AxiosError) => void;
+}> = [];
 
-      if (newToken) {
-        localStorage.setItem("access_token", newToken.accessToken);
-        localStorage.setItem("refresh_token", newToken.refreshToken);
-        requestMissed.headers.Authorization = `Bearer ${newToken.accessToken}`;
-        return HTTP(requestMissed);
-      } else {
+const processQueue = (error: AxiosError | null, token: string | null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token!);
+  });
+  failedQueue = [];
+};
+
+HTTP.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      const refreshToken = localStorage.getItem("refresh_token");
+      if (!refreshToken) {
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token: string) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(HTTP(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const res = await axios.post<{
+          success: boolean;
+          message: string;
+          data: {
+            accessToken: string;
+            refreshToken: string;
+          };
+        }>(`${baseURL}/api/auth/refresh-token`, {
+          refreshToken,
+        });
+
+        const newAccessToken = res.data.data.accessToken;
+        const newRefreshToken = res.data.data.refreshToken;
+
+        localStorage.setItem("access_token", newAccessToken);
+        localStorage.setItem("refresh_token", newRefreshToken);
+
+        processQueue(null, newAccessToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return HTTP(originalRequest);
+      } catch (err) {
+        processQueue(err as AxiosError, null);
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         window.location.href = "/login";
+
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
       }
     }
+
+    return Promise.reject(error);
   },
 );

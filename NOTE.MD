@@ -10,4 +10,10 @@
 
 # 27/01
 
-- chức năng login, register, verify-email, resend-email , getProfile, authMiddleware, format-time
+-loginSchema, chức năng login, register, verify-email, resend-email , getProfile, authMiddleware, format-time
+
+- lấy danh sách suggest, avatar trên suggest, footer, post chi tiết
+
+# 28/01
+
+- suggest user, footer, post detail, like, save, comment, fix refresh-token

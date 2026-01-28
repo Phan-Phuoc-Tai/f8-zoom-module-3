@@ -1,6 +1,6 @@
 import { useState } from "react";
-import LoginForm from "../children/LoginForm";
-import RegisterForm from "../children/RegisterForm";
+import LoginForm from "../children/auth/LoginForm";
+import RegisterForm from "../children/auth/RegisterForm";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Form() {

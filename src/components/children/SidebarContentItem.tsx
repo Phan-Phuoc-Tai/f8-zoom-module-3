@@ -34,7 +34,7 @@ export default function SidebarContentItem({ sidebarItem }: Props) {
         >
           <NavLink
             to={url}
-            className="group-data-[collapsible=icon]:size-10! h-auto"
+            className="group-data-[collapsible=icon]:size-10! h-12"
           >
             {Icon && <Icon style={{ width: 24, height: 24 }} />}
             <span className="ml-1 text-base font-normal text-(--text-primary)">

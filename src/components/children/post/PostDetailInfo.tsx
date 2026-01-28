@@ -1,18 +1,17 @@
 import { Bookmark, Heart, MessageCircle, Send } from "lucide-react";
-import { use, useEffect, useState } from "react";
-import { PostsContext } from "../../contexts/PostsContext";
-import { usePostStore } from "../../stores/postStore";
-import { Button } from "../ui/button";
-import { useAuthStore } from "../../stores/authStore";
-import { cn } from "../../lib/utils";
-import { PostDetail } from "./post/PostDetail";
+import { Button } from "../../ui/button";
+import { cn } from "../../../lib/utils";
+import { useEffect, useState } from "react";
+import { usePostStore, type PostDetail } from "../../../stores/postStore";
+import { useAuthStore } from "../../../stores/authStore";
+import { formatTime } from "../../../tools/formatTime";
 
-export default function PostInfo() {
-  const context = use(PostsContext);
-  const post = context?.post;
-  const caption = post?.caption;
-  const comments = post?.comments;
-  const userId = post?.userId;
+interface Props {
+  postDetail: PostDetail;
+}
+
+export default function PostDetailInfo({ postDetail: post }: Props) {
+  const createdAt = post?.createdAt;
   const likedBy = post?.likedBy;
   const savedBy = post?.savedBy;
   const postId = post?._id;
@@ -56,10 +55,11 @@ export default function PostInfo() {
     likedBy?.filter((idUser) => setLiked(idUser === user?._id));
     savedBy?.filter((idUser) => setSaved(idUser === user?._id));
   }, [likedBy, savedBy]);
+
   return (
-    <div>
+    <div className="absolute bottom-16 left-0 right-0 p-4">
       {/* Action */}
-      <div className="flex items-center justify-between my-2">
+      <div className="flex items-center justify-between my-2 ">
         <div className="flex items-center gap-3">
           <div className="like flex items-center gap-1">
             <Button
@@ -73,10 +73,9 @@ export default function PostInfo() {
                 style={{ width: 24, height: 24 }}
               />
             </Button>
-            <p className="font-medium">{likes && Math.abs(likes)}</p>
           </div>
 
-          <div className="comment flex items-center gap-1">
+          <div className="comment flex items-center">
             <Button
               size={null}
               variant={"outline"}
@@ -85,7 +84,6 @@ export default function PostInfo() {
             >
               <MessageCircle style={{ width: 24, height: 24 }} />
             </Button>
-            <p className="font-medium">{comments && Math.abs(comments)}</p>
           </div>
 
           <div className="share flex items-center">
@@ -115,11 +113,14 @@ export default function PostInfo() {
       </div>
       {/* info */}
 
-      <div className="flex items-center gap-1.5 text-[#0c1014] text-sm">
-        <h3 className="font-semibold">{userId?.username}</h3>
-        <p className="font-normal">{caption}</p>
+      <div className="flex flex-col gap-1 text-[#0c1014] text-sm">
+        {likes && likes >= 0 && (
+          <h3 className="font-semibold">{`${likes} lượt thích`}</h3>
+        )}
+        <p className="font-normal text-black/70 text-sm">
+          {createdAt && formatTime(createdAt)}
+        </p>
       </div>
-      {isOpen && setOpen && <PostDetail postId={postId} setOpen={setOpen} />}
     </div>
   );
 }

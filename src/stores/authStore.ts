@@ -29,6 +29,7 @@ interface AuthStoreType {
   handleResendVerificationEmail?: (email: string) => void;
   handleLogin?: (data: FormLoginData) => void;
   getProfile?: () => void;
+  logout?: () => void;
 }
 
 export const useAuthStore = create<AuthStoreType>()((set) => ({
@@ -160,5 +161,10 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+  logout: () => {
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access_token");
+    window.location.href = "/login";
   },
 }));

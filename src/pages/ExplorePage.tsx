@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { usePostStore } from "../stores/postStore";
 import { PostsContext } from "../contexts/PostsContext";
 import LoadingPost from "../tools/LoadingPost";
-import { ExploreCache } from "../cache/ExploreCache";
 import ExploreCard from "../components/parent/ExploreCard";
 import { toast } from "sonner";
+import { ExploreCache } from "../cache/Cache";
 
 export default function ExplorePage() {
   const { fetchExplore } = usePostStore();
@@ -13,7 +13,7 @@ export default function ExplorePage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: [ExploreCache.list],
+    queryKey: ExploreCache.list,
     queryFn: fetchExplore,
     retry: 2,
   });

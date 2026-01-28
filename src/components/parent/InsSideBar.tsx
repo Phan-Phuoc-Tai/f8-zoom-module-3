@@ -15,7 +15,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "../ui/sidebar";
 import { LayoutPanelTop, Menu } from "lucide-react";
 import SidebarContentItem from "../children/SidebarContentItem";
@@ -31,8 +30,12 @@ import { NavLink } from "react-router-dom";
 export default function InsSideBar() {
   const { sidebarMenus, sidebarMores, sidebarMetas } = useSidebarStore();
   const [itemActive, setItemActive] = useState(1);
-  const { isLoading } = useAuthStore();
-
+  const { isLoading, logout } = useAuthStore();
+  const handleLogout = () => {
+    if (logout) {
+      logout();
+    }
+  };
   return (
     <Sidebar
       collapsible="icon"
@@ -107,10 +110,14 @@ export default function InsSideBar() {
                   </DropdownMenuItem>
                   <div className="bg-black/5 h-[2px]"></div>
                   <DropdownMenuItem className="p-2 hover:outline-none">
-                    <div className="p-4 rounded-lg hover:bg-black/10 cursor-pointer">
-                      <span className="ml-1 text-base font-normal text-(--text-primary)">
+                    <div className="p-4 rounded-lg hover:bg-red-600/10 cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="ml-1 text-base text-red-500 font-medium cursor-pointer"
+                      >
                         Đăng xuất
-                      </span>
+                      </button>
                     </div>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>

@@ -3,11 +3,12 @@ import InsSideBar from "../components/parent/InsSideBar";
 import { SidebarProvider } from "../components/ui/sidebar";
 import { useAuthStore } from "../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
+import { Profile } from "../cache/Cache";
 
 export default function MainLayout() {
   const { getProfile } = useAuthStore();
   const { data } = useQuery({
-    queryKey: ["user"],
+    queryKey: Profile.profile,
     queryFn: getProfile,
     retry: 2,
   });

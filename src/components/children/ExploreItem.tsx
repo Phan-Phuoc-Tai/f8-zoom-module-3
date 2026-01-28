@@ -3,8 +3,8 @@ import { PostsContext } from "../../contexts/PostsContext";
 
 export function ExploreItem() {
   const context = use(PostsContext);
-  const image = context?.image;
-  const video = context?.video;
+  const image = context?.post?.image;
+  const video = context?.post?.video;
   const API_URL = "https://instagram.f8team.dev";
 
   return (
