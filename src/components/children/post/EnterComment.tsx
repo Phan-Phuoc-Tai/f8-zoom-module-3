@@ -33,12 +33,12 @@ export default function EnterComment({ postId }: Props) {
   };
 
   return (
-    <div className="absolute bottom-4 left-0 right-0 px-4 pt-2 border-t border-black/10">
+    <div className="absolute bottom-2 left-0 right-0 px-4 pt-2 border-t border-black/10">
       <form onSubmit={handleSubmit(onSubmit)} className="flex items-center">
         <input
           type="text"
           placeholder="Bình luận..."
-          className="w-full py-2 outline-none"
+          className="w-full py-2 outline-none pr-2"
           value={value}
           onInput={handleChangeValue}
           {...register("comment")}
@@ -48,7 +48,7 @@ export default function EnterComment({ postId }: Props) {
             variant={"outline"}
             size={null}
             disabled={isLoading}
-            className="flex items-center justify-center p-1 border-0 outline-none shadow-none text-blue-600/90 text-base"
+            className="flex items-center justify-center p-1 border-0 outline-none shadow-none text-blue-600/90 text-base w-[42px]"
           >
             <Spinner />
           </Button>

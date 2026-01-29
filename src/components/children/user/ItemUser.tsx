@@ -15,7 +15,7 @@ export default function ItemUser() {
   const fullName = context?.user?.fullName || context?.suggestedUser?.fullName;
   const profilePicture =
     context?.user?.profilePicture || context?.suggestedUser?.profilePicture;
-  const baseUrl = "https://instagram.f8team.dev";
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   return (
     <>
@@ -27,7 +27,7 @@ export default function ItemUser() {
               className="object-cover"
             />
             <AvatarFallback className="font-medium text-black/80">
-              {fullName && fullName.charAt(0).toUpperCase()}
+              {username && username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </ItemMedia>

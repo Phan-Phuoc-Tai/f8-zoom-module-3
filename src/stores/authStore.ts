@@ -143,8 +143,7 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
         throw error;
       });
       const output = response.data.data;
-
-      return set({
+      set({
         isAuthenticated: true,
         user: {
           email: output.email,
@@ -154,6 +153,7 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
           profilePicture: output.profilePicture,
         },
       });
+      return output;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message);

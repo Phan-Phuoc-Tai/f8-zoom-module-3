@@ -27,8 +27,7 @@ export function PostDetail({ postId, setOpen }: Props) {
 
   const caption = postDetail?.caption;
   const userId = postDetail?.userId;
-  const baseUrl = "https://instagram.f8team.dev";
-
+  const baseURL = import.meta.env.VITE_BASE_URL;
   if (error) {
     return (
       <div className="fixed inset-0 z-100 w-full min-h-screen flex items-center justify-center ">
@@ -61,14 +60,15 @@ export function PostDetail({ postId, setOpen }: Props) {
           ) : (
             <>
               {postDetail?.image && (
-                <img src={`${baseUrl}${postDetail?.image}`} />
+                <img src={`${baseURL}${postDetail?.image}`} />
               )}
               {postDetail?.video && (
                 <video
-                  src={`${baseUrl}${postDetail?.video}`}
+                  src={`${baseURL}${postDetail?.video}`}
                   autoPlay
                   loop
                   controls
+                  className="max-h-[720px] object-contain"
                 />
               )}
             </>
@@ -106,11 +106,11 @@ export function PostDetail({ postId, setOpen }: Props) {
           {isLoading ? (
             <div className="p-4 flex items-center gap-2">
               <Spinner />
-              <span>Đang tải dữ liệu...</span>
+              <span>Đang tải bình luận...</span>
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between gap-3 p-4">
+              <div className="flex items-center justify-between gap-3 p-4 ">
                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-black font-medium">
                   <span>{userId?.username.charAt(0).toUpperCase()}</span>
                 </div>
@@ -124,12 +124,14 @@ export function PostDetail({ postId, setOpen }: Props) {
                 </div>
               </div>
 
-              {comments &&
-                comments.map((comment, index) => (
-                  <div key={index}>
-                    <Comment comment={comment} />
-                  </div>
-                ))}
+              <div className="overflow-auto h-[432px] scroll-smooth">
+                {comments &&
+                  comments.map((comment, index) => (
+                    <div key={index}>
+                      <Comment comment={comment} />
+                    </div>
+                  ))}
+              </div>
               {postDetail && <PostDetailInfo postDetail={postDetail} />}
               {postId && <EnterComment postId={postId} />}
             </>

@@ -1,29 +1,37 @@
-import { use } from "react";
+import { use, useState } from "react";
 import { PostsContext } from "../../contexts/PostsContext";
+import { PostDetail } from "./post/PostDetail";
 
 export function ExploreItem() {
   const context = use(PostsContext);
   const image = context?.post?.image;
   const video = context?.post?.video;
-  const API_URL = "https://instagram.f8team.dev";
-
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  const postId = context?.post?._id;
+  const [isOpen, setOpen] = useState(false);
   return (
-    <div className="max-w-80 max-h-80 aspect-square">
-      {image && (
-        <img
-          src={`${API_URL}${image}`}
-          className="w-full h-full object-cover shadow-md"
-        ></img>
-      )}
-      {video && (
-        <video
-          src={`${API_URL}${video}`}
-          autoPlay
-          loop
-          muted
-          className="w-full h-full object-cover shadow-md"
-        ></video>
-      )}
+    <div>
+      <div
+        onClick={() => setOpen(true)}
+        className="max-w-80 max-h-80 aspect-square"
+      >
+        {image && (
+          <img
+            src={`${baseURL}${image}`}
+            className="w-full h-full object-cover shadow-md"
+          ></img>
+        )}
+        {video && (
+          <video
+            src={`${baseURL}${video}`}
+            autoPlay
+            loop
+            muted
+            className="w-full h-full object-cover shadow-md"
+          ></video>
+        )}
+      </div>
+      {isOpen && setOpen && <PostDetail postId={postId} setOpen={setOpen} />}
     </div>
   );
 }

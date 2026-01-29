@@ -7,7 +7,7 @@ import { Profile } from "../cache/Cache";
 
 export default function MainLayout() {
   const { getProfile } = useAuthStore();
-  const { data } = useQuery({
+  const { data: _data } = useQuery({
     queryKey: Profile.profile,
     queryFn: getProfile,
     retry: 2,

@@ -20,6 +20,7 @@ export default function ExplorePage() {
   if (error) {
     toast.error(error.message);
   }
+
   return (
     <main className="flex justify-center w-full pt-12">
       <div className="max-w-[963px] h-full w-full grid grid-cols-3 gap-1">
@@ -29,7 +30,7 @@ export default function ExplorePage() {
           ))}
         {explores?.map((post, index) => (
           <div key={index} className="w-max">
-            <PostsContext.Provider value={post}>
+            <PostsContext.Provider value={{ post }}>
               <ExploreCard />
             </PostsContext.Provider>
           </div>

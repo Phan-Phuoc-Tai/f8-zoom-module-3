@@ -1,22 +1,22 @@
 import { use } from "react";
-import { PostsContext } from "../../contexts/PostsContext";
+import { PostsContext } from "../../../contexts/PostsContext";
 
-export function CarouselPostImage() {
+export function PostMedia() {
   const context = use(PostsContext);
   const image = context?.post?.image;
   const video = context?.post?.video;
-  const API_URL = "https://instagram.f8team.dev";
+  const baseURL = import.meta.env.VITE_BASE_URL;
   return (
     <div>
       {image && (
         <img
-          src={`${API_URL}${image}`}
+          src={`${baseURL}${image}`}
           className="w-full h-full object-fit rounded-md"
         ></img>
       )}
       {video && (
         <video
-          src={`${API_URL}${video}`}
+          src={`${baseURL}${video}`}
           autoPlay
           loop
           muted

@@ -7,14 +7,11 @@ import LoadingPost from "../tools/LoadingPost";
 import { toast } from "sonner";
 import SuggestedUser from "../components/parent/SuggestedUser";
 import Footer from "../components/parent/Footer";
+import { useEffect } from "react";
 
 export default function HomePage() {
-  const { fetchNewsFeed } = usePostStore();
-  const {
-    data: posts,
-    isLoading,
-    error,
-  } = useQuery({
+  const { fetchNewsFeed, posts } = usePostStore();
+  const { data, isLoading, error } = useQuery({
     queryKey: PostsCache.list,
     queryFn: fetchNewsFeed,
     retry: 2,
@@ -23,6 +20,11 @@ export default function HomePage() {
     toast.error(error.message);
   }
 
+  useEffect(() => {
+    if (data) {
+      posts?.concat(...data);
+    }
+  }, [data]);
   return (
     <div className="flex flex-col items-center w-full">
       <main className="flex justify-center w-full pt-12 gap-3">

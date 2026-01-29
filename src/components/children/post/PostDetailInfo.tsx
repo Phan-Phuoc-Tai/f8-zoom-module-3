@@ -15,36 +15,41 @@ export default function PostDetailInfo({ postDetail: post }: Props) {
   const likedBy = post?.likedBy;
   const savedBy = post?.savedBy;
   const postId = post?._id;
-  const [isLiked, setLiked] = useState(post?.isLiked);
+  const likes = post?.likes;
+  const isLiked = post?.isLiked;
+  const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [likes, setLikes] = useState(post?.likes);
   const [isOpen, setOpen] = useState(false);
-  const { likePost, unLikePost, savePost, unSavePost } = usePostStore();
+  const { likePost, unLikePost, savePost, unSavePost, fetchNewsFeed } =
+    usePostStore();
   const { user } = useAuthStore();
 
   const handleToggleLike = async () => {
-    if (postId && likes && setLikes) {
-      if (!isLiked) {
-        likePost(postId);
-        setLikes(likes + 1);
-        setLiked(true);
+    if (postId) {
+      if (!liked) {
+        likePost(postId)
+          .then(() => fetchNewsFeed())
+          .then(() => setLiked(true));
+
         return;
       }
-      unLikePost(postId);
-      setLikes(likes - 1);
-      setLiked(false);
+      unLikePost(postId)
+        .then(() => fetchNewsFeed())
+        .then(() => setLiked(false));
       return;
     }
   };
   const handleToggleSave = async () => {
     if (postId && setSaved) {
       if (!saved) {
-        savePost(postId);
-        setSaved(true);
+        savePost(postId)
+          .then(() => fetchNewsFeed())
+          .then(() => setSaved(true));
         return;
       }
-      unSavePost(postId);
-      setSaved(false);
+      unSavePost(postId)
+        .then(() => fetchNewsFeed())
+        .then(() => setSaved(false));
       return;
     }
   };
@@ -52,12 +57,30 @@ export default function PostDetailInfo({ postDetail: post }: Props) {
     setOpen(!isOpen);
   };
   useEffect(() => {
-    likedBy?.filter((idUser) => setLiked(idUser === user?._id));
-    savedBy?.filter((idUser) => setSaved(idUser === user?._id));
+    const timeout = setTimeout(() => {
+      if (isLiked) {
+        setLiked(true);
+      } else {
+        setLiked(false);
+      }
+    }, 0);
+    likedBy?.map((idUser) => {
+      if (idUser === user?._id) {
+        setLiked(true);
+      }
+    });
+    savedBy?.map((idUser) => {
+      if (idUser === user?._id) {
+        setSaved(true);
+      }
+    });
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [likedBy, savedBy]);
 
   return (
-    <div className="absolute bottom-16 left-0 right-0 p-4">
+    <div className="absolute bottom-12 left-0 right-0 p-4">
       {/* Action */}
       <div className="flex items-center justify-between my-2 ">
         <div className="flex items-center gap-3">
@@ -69,7 +92,7 @@ export default function PostDetailInfo({ postDetail: post }: Props) {
               onClick={handleToggleLike}
             >
               <Heart
-                className={cn("", isLiked && "fill-red-500 text-red-500")}
+                className={cn("", liked && "fill-red-500 text-red-500")}
                 style={{ width: 24, height: 24 }}
               />
             </Button>

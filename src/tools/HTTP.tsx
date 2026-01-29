@@ -4,7 +4,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 
-const baseURL = "https://instagram.f8team.dev";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export const HTTP: AxiosInstance = axios.create({
   baseURL,

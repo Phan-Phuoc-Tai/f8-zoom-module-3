@@ -2,18 +2,11 @@ import {
   AtSign,
   Bookmark,
   Circle,
-  Compass,
   Grid2x2Plus,
-  Heart,
-  House,
   MessageSquareWarning,
   Phone,
-  Plus,
-  Search,
-  Send,
   Settings,
   SquareActivity,
-  SquarePlay,
   Sun,
 } from "lucide-react";
 import { create } from "zustand";
@@ -26,55 +19,10 @@ type SidebarType = {
   icon?: LucideIcon;
 }[];
 interface SidebarState {
-  sidebarMenus: SidebarType;
   sidebarMores: SidebarType;
   sidebarMetas: SidebarType;
 }
 export const useSidebarStore = create<SidebarState>()(() => ({
-  sidebarMenus: [
-    {
-      id: 1,
-      title: "Trang chủ",
-      url: "/",
-      icon: House,
-    },
-    {
-      id: 2,
-      title: "Reels",
-      url: "#",
-      icon: SquarePlay,
-    },
-    {
-      id: 3,
-      title: "Tin nhắn",
-      url: "#",
-      icon: Send,
-    },
-    {
-      id: 4,
-      title: "Tìm kiếm",
-      url: "#",
-      icon: Search,
-    },
-    {
-      id: 5,
-      title: "Khám phá",
-      url: "/explore",
-      icon: Compass,
-    },
-    {
-      id: 6,
-      title: "Thông báo",
-      url: "#",
-      icon: Heart,
-    },
-    {
-      id: 7,
-      title: "Tạo",
-      url: "#",
-      icon: Plus,
-    },
-  ],
   sidebarMores: [
     {
       id: 1,
