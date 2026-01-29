@@ -137,7 +137,7 @@ export default function PostDetailInfo({ postDetail: post }: Props) {
       {/* info */}
 
       <div className="flex flex-col gap-1 text-[#0c1014] text-sm">
-        {likes && likes >= 0 && (
+        {likes! >= 0 && (
           <h3 className="font-semibold">{`${likes} lượt thích`}</h3>
         )}
         <p className="font-normal text-black/70 text-sm">

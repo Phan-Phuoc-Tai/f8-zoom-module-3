@@ -17,3 +17,7 @@
 # 28/01
 
 - 20:55 Commit-4th suggest user, footer, post detail, like, save, comment, fix refresh-token
+
+# 29/01
+
+- 20:15 Commit-5th create, update, delete post & comment

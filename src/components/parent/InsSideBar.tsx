@@ -168,7 +168,7 @@ export default function InsSideBar() {
                   <div className="bg-black/5 h-1.5"></div>
                   <DropdownMenuGroup>
                     <DropdownMenuItem className="p-2 hover:outline-none">
-                      <div className="p-4 rounded-lg hover:bg-black/10 cursor-pointer">
+                      <div className="p-4 rounded-lg w-full hover:bg-black/10 cursor-pointer">
                         <span className="ml-1 text-base font-normal text-(--text-primary)">
                           Chuyển tài khoản
                         </span>
@@ -176,7 +176,7 @@ export default function InsSideBar() {
                     </DropdownMenuItem>
                     <div className="bg-black/5 h-[2px]"></div>
                     <DropdownMenuItem className="p-2 hover:outline-none">
-                      <div className="p-4 rounded-lg hover:bg-red-600/10 cursor-pointer">
+                      <div className="p-4 rounded-lg w-full hover:bg-red-600/10 cursor-pointer">
                         <button
                           type="button"
                           onClick={handleLogout}

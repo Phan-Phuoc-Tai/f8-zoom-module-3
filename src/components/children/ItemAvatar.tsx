@@ -8,13 +8,17 @@ import {
 import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
 import { PostsContext } from "../../contexts/PostsContext";
-import { use } from "react";
+import { use, useState } from "react";
 import { formatTime } from "../../tools/formatTime";
+import PostAction from "./post/PostAction";
 
 export function ItemAvatar() {
   const context = use(PostsContext);
   const userId = context?.post?.userId;
   const createdAt = context?.post?.createdAt;
+  const postId = context?.post?._id;
+  const caption = context?.post?.caption;
+  const [openModalAction, setOpenModalAction] = useState(false);
   return (
     <div className="flex w-full flex-col gap-6">
       <Item className="gap-3 p-0 pr-[10px] pl-[14px] pb-3">
@@ -35,12 +39,25 @@ export function ItemAvatar() {
           <Button
             size="icon-lg"
             variant="outline"
-            className="rounded-full border-0 outline-none shadow-none"
+            className="rounded-full border-0 outline-none shadow-none cursor-pointer"
+            onClick={() => setOpenModalAction(true)}
           >
             <Ellipsis />
           </Button>
         </ItemActions>
       </Item>
+      {openModalAction && (
+        <PostsContext.Provider
+          value={{
+            userId,
+            postId,
+            caption,
+            setOpenModalAction,
+          }}
+        >
+          <PostAction />
+        </PostsContext.Provider>
+      )}
     </div>
   );
 }

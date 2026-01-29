@@ -17,6 +17,13 @@ interface PostsContextType {
     _id?: string;
   };
   setPosts?: Dispatch<SetStateAction<[] | undefined>>;
+  userId?: {
+    _id: string;
+    username: string;
+  };
+  setOpenModalAction?: Dispatch<SetStateAction<boolean>>;
+  postId?: string;
+  caption?: string;
 }
 
 export const PostsContext = createContext<PostsContextType | null>(null);

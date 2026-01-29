@@ -42,6 +42,11 @@ export interface Post extends PostType {
   comments?: [];
 }
 
+export interface PostUpdate extends PostType {
+  userId?: string;
+  comments?: number;
+}
+
 export interface NewFeeds extends PostType {
   userId?: {
     _id: string;
@@ -98,6 +103,8 @@ interface PostStoreType {
     content: string,
   ) => Promise<CommentType>;
   createPost: (file: File, caption?: string) => Promise<PostType>;
+  deletePost: (postId: string) => Promise<DeleteType>;
+  updatePost: (postId: string, caption?: string) => Promise<PostUpdate>;
 }
 export const usePostStore = create<PostStoreType>()((set) => ({
   isLoading: false,
@@ -210,7 +217,7 @@ export const usePostStore = create<PostStoreType>()((set) => ({
     try {
       set({ isLoading: true });
       const formData = new FormData();
-      if (file!.type.startsWith("image") && caption) {
+      if (caption || caption === "") {
         formData.append("file", file);
         formData.append("caption", caption);
       }
@@ -218,6 +225,44 @@ export const usePostStore = create<PostStoreType>()((set) => ({
         headers: {
           "Content-Type": "multipart/form-data",
         },
+      }).catch((error) => {
+        throw error;
+      });
+      const data = response.data;
+      toast.success(data.message);
+      return data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  deletePost: async (postId: string) => {
+    try {
+      set({ isLoading: true });
+      const response = await HTTP.delete(`/api/posts/${postId}`).catch(
+        (error) => {
+          throw error;
+        },
+      );
+      const data = response.data;
+      toast.success(data.message);
+      return data.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  updatePost: async (postId: string, caption?: string) => {
+    try {
+      set({ isLoading: true });
+      const response = await HTTP.patch(`/api/posts/${postId}`, {
+        caption,
       }).catch((error) => {
         throw error;
       });
