@@ -2,9 +2,17 @@ import { create } from "zustand";
 import { HTTP } from "../tools/HTTP";
 import { toast } from "sonner";
 import axios from "axios";
-export interface FormLoginData {
-  email: string;
+
+export interface FormDataType {
+  email?: string;
+}
+export interface FormLoginData extends FormDataType {
   password: string;
+}
+
+export interface FormResetData {
+  password: string;
+  confirmPassword: string;
 }
 export interface FormRegisterData extends FormLoginData {
   username: string;
@@ -16,6 +24,8 @@ interface AuthStoreType {
   isAuthenticated?: boolean;
   isRegisterSuccess?: boolean;
   isLoading?: boolean;
+  isSended?: boolean;
+  isResetSuccess?: boolean;
   user?: {
     username?: string;
     fullName?: string;
@@ -30,6 +40,8 @@ interface AuthStoreType {
   handleLogin?: (data: FormLoginData) => void;
   getProfile?: () => void;
   logout?: () => void;
+  handleSendEmailReset?: (email: string) => void;
+  handleResetPassword?: (data: FormResetData, token: string) => void;
 }
 
 export const useAuthStore = create<AuthStoreType>()((set) => ({
@@ -37,6 +49,8 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
   isAuthenticated: false,
   isRegisterSuccess: false,
   isLoading: false,
+  isSended: false,
+  isResetSuccess: false,
   user: {
     username: "",
     fullName: "",
@@ -166,5 +180,51 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("access_token");
     window.location.href = "/login";
+    return set({
+      token: "",
+      isAuthenticated: false,
+    });
+  },
+
+  handleSendEmailReset: async (email) => {
+    try {
+      set({ isLoading: true });
+      const response = await HTTP.post(`/api/auth/forgot-password`, {
+        email,
+      }).catch((error) => {
+        throw error;
+      });
+      return set({
+        isSended: response.data.success,
+        isResetSuccess: !response.data.success,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  handleResetPassword: async (data, token) => {
+    try {
+      set({ isLoading: true });
+      const response = await HTTP.post(`/api/auth/reset-password/${token}`, {
+        ...data,
+      }).catch((error) => {
+        throw error;
+      });
+      return set({
+        isSended: !response.data.success,
+        isResetSuccess: response.data.success,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({ isLoading: false });
+    }
   },
 }));

@@ -93,7 +93,7 @@ export default function RegisterForm() {
               disabled={isLoading}
               className="mt-3 bg-blue-600/90 text-base p-2 h-auto hover:bg-blue-700 cursor-pointer"
             >
-              <Spinner /> Đang đăng ký...
+              <Spinner /> Đang đăng nhập...
             </Button>
           ) : (
             <Button
@@ -102,7 +102,7 @@ export default function RegisterForm() {
               disabled={!isValid}
               className="mt-3 bg-blue-600/90 text-base p-2 h-auto hover:bg-blue-700 cursor-pointer"
             >
-              Đăng ký
+              Đăng nhập
             </Button>
           )}
           <div className="w-full">
@@ -122,7 +122,7 @@ export default function RegisterForm() {
                 </p>
               </div>
               <div className="my-8 text-center font-semibold hover:underline cursor-pointer">
-                <NavLink to={"#"}>Quên mật khẩu?</NavLink>
+                <NavLink to={"/forgot-password"}>Quên mật khẩu?</NavLink>
               </div>
               <div className="text-base text-center">
                 <p className="font-medium">

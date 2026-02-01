@@ -7,8 +7,6 @@ import { PostDetail } from "./PostDetail";
 
 export default function PostAction() {
   const context = use(PostsContext);
-  console.log(context);
-
   const setOpenModalAction = context?.setOpenModalAction;
   const user = context?.userId;
   const postId = context?.postId;

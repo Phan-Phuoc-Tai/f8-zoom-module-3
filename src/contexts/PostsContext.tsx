@@ -7,7 +7,7 @@ interface PostsContextType {
     createdAt?: string | Date;
     image?: string | null;
     isLiked?: boolean;
-    isSave?: boolean;
+    isSaved?: boolean;
     likedBy?: string[];
     likes?: number;
     mediaType?: string;

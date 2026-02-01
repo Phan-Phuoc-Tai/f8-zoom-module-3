@@ -18,6 +18,8 @@ export default function PostInfo() {
   const postId = post?._id;
   const likes = post?.likes;
   const isLiked = post?.isLiked;
+  const isSaved = post?.isSaved;
+
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [isOpen, setOpen] = useState(false);
@@ -57,13 +59,17 @@ export default function PostInfo() {
   const handleOpenPostDetail = () => {
     setOpen(!isOpen);
   };
-
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (isLiked) {
         setLiked(true);
       } else {
         setLiked(false);
+      }
+      if (isSaved) {
+        setSaved(true);
+      } else {
+        setSaved(false);
       }
     }, 0);
     likedBy?.map((idUser) => {
@@ -74,6 +80,7 @@ export default function PostInfo() {
     savedBy?.map((idUser) => {
       if (idUser === user?._id) {
         setSaved(true);
+        return;
       }
     });
     return () => {

@@ -19,6 +19,21 @@ interface UserContextType {
     _id?: string;
     profilePicture?: string | null;
   };
+  post?: {
+    caption?: string;
+    comments?: number;
+    createdAt?: string | Date;
+    image?: string | null;
+    isLiked?: boolean;
+    isSaved?: boolean;
+    likedBy?: string[];
+    likes?: number;
+    mediaType?: string;
+    savedBy?: string[];
+    userId?: { _id: string; username: string };
+    video?: string | null;
+    _id?: string;
+  };
 }
 
 export const UserContext = createContext<UserContextType | null>(null);

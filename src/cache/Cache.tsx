@@ -17,3 +17,10 @@ export const Profile = {
 export const SuggestedUsersCache = {
   list: ["suggestedUsers"],
 };
+
+export const UserPostsCache = {
+  list: ["posts"],
+};
+export const UserProfile = {
+  profile: ["profile"],
+};

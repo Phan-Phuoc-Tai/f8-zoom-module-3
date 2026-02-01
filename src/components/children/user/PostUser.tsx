@@ -1,26 +1,27 @@
 import { use, useState } from "react";
-import { PostsContext } from "../../contexts/PostsContext";
-import { PostDetail } from "./post/PostDetail";
 import { Clapperboard, Images } from "lucide-react";
+import { UserContext } from "../../../contexts/UserContext";
+import { PostDetail } from "../post/PostDetail";
 
-export function ExploreItem() {
-  const context = use(PostsContext);
+export function PostUser() {
+  const context = use(UserContext);
   const image = context?.post?.image;
   const video = context?.post?.video;
   const baseURL = import.meta.env.VITE_BASE_URL;
   const postId = context?.post?._id;
   const [isOpen, setOpen] = useState(false);
+
   return (
-    <div>
+    <article>
       <div
         onClick={() => setOpen(true)}
-        className="max-w-80 max-h-80 aspect-square relative transition duration-300 hover:outline hover:outline-black/70 cursor-pointer"
+        className="max-w-69 max-h-69 aspect-square relative transition duration-500 hover:outline-2 hover:outline-black/70 cursor-pointer"
       >
         {image && (
           <>
             <img
               src={`${baseURL}${image}`}
-              className="w-80 h-80 object-cover"
+              className="w-full h-full object-cover"
             ></img>
             <div className="absolute top-2 right-2 text-shadow-black text-white ">
               <Images />
@@ -43,6 +44,6 @@ export function ExploreItem() {
         )}
       </div>
       {isOpen && setOpen && <PostDetail postId={postId} setOpen={setOpen} />}
-    </div>
+    </article>
   );
 }

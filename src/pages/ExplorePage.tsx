@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { usePostStore } from "../stores/postStore";
 import { PostsContext } from "../contexts/PostsContext";
-import LoadingPost from "../tools/LoadingPost";
 import ExploreCard from "../components/parent/ExploreCard";
 import { toast } from "sonner";
 import { ExploreCache } from "../cache/Cache";
+import LoadingExplore from "../tools/LoadingExplore";
 
 export default function ExplorePage() {
   const { fetchExplore } = usePostStore();
@@ -25,8 +25,8 @@ export default function ExplorePage() {
     <main className="flex justify-center w-full pt-12">
       <div className="max-w-[963px] h-full w-full grid grid-cols-3 gap-1">
         {isLoading &&
-          Array.from({ length: 9 }).map((_, index) => (
-            <LoadingPost key={index} />
+          Array.from({ length: 12 }).map((_, index) => (
+            <LoadingExplore key={index} />
           ))}
         {explores?.map((post, index) => (
           <div key={index} className="w-max">

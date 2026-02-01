@@ -133,9 +133,9 @@ export function PostDetail({ postId, setOpen }: Props) {
                   ))}
               </div>
               {postDetail && <PostDetailInfo postDetail={postDetail} />}
-              {postId && <EnterComment postId={postId} />}
             </>
           )}
+          {postId && <EnterComment postId={postId} />}
         </div>
       </div>
       <div
