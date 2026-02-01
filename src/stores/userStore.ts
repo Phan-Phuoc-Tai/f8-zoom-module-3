@@ -44,15 +44,21 @@ interface UserPostType {
 interface UserStoreType {
   profileUser: profileUserType;
   userPosts: UserPostType[];
+  savedPosts: UserPostType[];
+  videoPosts: UserPostType[];
   isLoading: boolean;
+  isLoadingPost: boolean;
   fetchSuggestedUser?: () => Promise<[]>;
-  getUserById?: (userId: string) => void;
-  getUserPosts?: (userId: string) => void;
+  getUserById?: (userId: string) => Promise<profileUserType>;
+  getUserPosts?: (userId: string, type?: "all" | "video" | "saved") => void;
 }
 export const useUserStore = create<UserStoreType>()((set) => ({
   profileUser: {},
   userPosts: [],
+  savedPosts: [],
+  videoPosts: [],
   isLoading: false,
+  isLoadingPost: false,
   fetchSuggestedUser: async () => {
     const response = await HTTP.get(`/api/users/suggested?limit=5`);
     const data = response.data.data;
@@ -81,12 +87,42 @@ export const useUserStore = create<UserStoreType>()((set) => ({
       });
     }
   },
-  getUserPosts: async (userId: string) => {
-    const response = await HTTP.get(`/api/posts/user/${userId}?filter=all`);
-    const data = response.data.data;
-    set({
-      userPosts: data.posts,
-    });
-    return data;
+  getUserPosts: async (
+    userId: string,
+    type: "all" | "video" | "saved" = "all",
+  ) => {
+    try {
+      set({
+        isLoadingPost: true,
+      });
+      const response = await HTTP.get(
+        `/api/posts/user/${userId}?filter=${type}`,
+      );
+      const data = response.data.data;
+      if (type === "saved") {
+        set({
+          savedPosts: data.posts,
+        });
+        return data;
+      }
+      if (type === "video") {
+        set({
+          videoPosts: data.posts,
+        });
+        return data;
+      }
+      set({
+        userPosts: data.posts,
+      });
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({
+        isLoadingPost: false,
+      });
+    }
   },
 }));

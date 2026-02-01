@@ -26,6 +26,12 @@
 
 - forgot password, UI user
 
+# 31/1
+
+- commit-6th: user
+
+# 1/1
+
 1. Luồng chat real-time
 
 - Giao thức http

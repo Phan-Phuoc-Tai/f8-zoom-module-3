@@ -32,8 +32,6 @@ export function PostUser() {
           <>
             <video
               src={`${baseURL}${video}`}
-              autoPlay
-              loop
               muted
               className="w-full h-full object-cover"
             ></video>

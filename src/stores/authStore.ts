@@ -19,6 +19,34 @@ export interface FormRegisterData extends FormLoginData {
   fullName: string;
   confirmPassword: string;
 }
+
+export interface FormUpdateProfile {
+  fullName?: string;
+  bio?: string;
+  website?: string;
+  gender?: string;
+  profilePicture?: string | null;
+}
+
+interface UserProfileType {
+  _id?: string;
+  email?: string;
+  username?: string;
+  fullName?: string;
+  profilePicture?: string | null;
+  bio?: string;
+  gender?: string;
+  website?: string;
+  isVerified?: boolean;
+  verificationToken?: null;
+  verificationTokenExpiry?: null;
+  googleId?: null;
+  resetPasswordToken?: null;
+  resetPasswordExpiry?: null;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: 0;
+}
 interface AuthStoreType {
   isVerified?: boolean;
   isAuthenticated?: boolean;
@@ -26,22 +54,17 @@ interface AuthStoreType {
   isLoading?: boolean;
   isSended?: boolean;
   isResetSuccess?: boolean;
-  user?: {
-    username?: string;
-    fullName?: string;
-    email?: string;
-    _id?: string;
-    profilePicture?: string | null;
-  };
+  user?: UserProfileType;
   token: string;
   handleRegister?: (data: FormRegisterData) => void;
   handleVerifyEmail?: (token: string) => void;
   handleResendVerificationEmail?: (email: string) => void;
   handleLogin?: (data: FormLoginData) => void;
-  getProfile?: () => void;
+  getProfile?: () => Promise<UserProfileType>;
   logout?: () => void;
   handleSendEmailReset?: (email: string) => void;
   handleResetPassword?: (data: FormResetData, token: string) => void;
+  handleUpdateProfile?: (data: FormUpdateProfile) => Promise<UserProfileType>;
 }
 
 export const useAuthStore = create<AuthStoreType>()((set) => ({
@@ -51,13 +74,7 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
   isLoading: false,
   isSended: false,
   isResetSuccess: false,
-  user: {
-    username: "",
-    fullName: "",
-    email: "",
-    _id: "",
-    profilePicture: "",
-  },
+  user: {},
   token: "",
   handleRegister: async (data) => {
     try {
@@ -159,13 +176,7 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
       const output = response.data.data;
       set({
         isAuthenticated: true,
-        user: {
-          email: output.email,
-          username: output.username,
-          fullName: output.fullName,
-          _id: output._id,
-          profilePicture: output.profilePicture,
-        },
+        user: output,
       });
       return output;
     } catch (error) {
@@ -219,6 +230,46 @@ export const useAuthStore = create<AuthStoreType>()((set) => ({
         isSended: !response.data.success,
         isResetSuccess: response.data.success,
       });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  handleUpdateProfile: async (data: FormUpdateProfile) => {
+    try {
+      set({ isLoading: true });
+      const formData = new FormData();
+
+      if (data.fullName) {
+        formData.append("fullName", data.fullName);
+      }
+      if (data.bio) {
+        formData.append("bio", data.bio);
+      }
+      if (data.website) {
+        formData.append("website", data.website);
+      }
+      if (data.gender) {
+        formData.append("gender", data.gender);
+      }
+
+      if (data.profilePicture && data.profilePicture.length > 0) {
+        formData.append("profilePicture", data.profilePicture[0]);
+      }
+      const response = await HTTP.patch(`/api/users/profile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }).catch((error) => {
+        throw error;
+      });
+      const output = response.data;
+      toast.success(output.message);
+      return output.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message);

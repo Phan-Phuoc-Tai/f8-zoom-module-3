@@ -20,6 +20,7 @@ import {
   Compass,
   Heart,
   House,
+  Instagram,
   LayoutPanelTop,
   Menu,
   PlusSquare,
@@ -32,9 +33,10 @@ import DropMenuSidebarMeta from "../children/sidebar/DropMenuSidebarMeta";
 import { useAuthStore } from "../../stores/authStore";
 import { Spinner } from "../ui/spinner";
 import SidebarProfile from "../children/sidebar/SidebarProfile";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import CreatePost from "../children/post/CreatePost";
+import { cn } from "../../lib/utils";
 
 export default function InsSideBar() {
   const { sidebarMores, sidebarMetas } = useSidebarStore();
@@ -45,6 +47,8 @@ export default function InsSideBar() {
       logout();
     }
   };
+  const { pathname } = useLocation();
+  const isOpen = pathname !== "/chat" ? true : false;
   return (
     <>
       <Sidebar
@@ -52,12 +56,21 @@ export default function InsSideBar() {
         className="w-50 group-data-[collapsible=icon]:w-15"
       >
         <SidebarHeader>
-          <NavLink
-            to={"/"}
-            className="h-15 w-30 flex items-center justify-center mx-auto mt-5 select-none"
-          >
-            <img src="/images/ins-logo.svg" />
-          </NavLink>
+          {isOpen ? (
+            <NavLink
+              to={"/"}
+              className="h-15 w-30 flex items-center justify-center mx-auto mt-5 select-none"
+            >
+              <img src="/images/ins-logo.svg" />
+            </NavLink>
+          ) : (
+            <NavLink
+              to={"/"}
+              className="flex items-center justify-center mt-5 select-none"
+            >
+              <Instagram />
+            </NavLink>
+          )}
         </SidebarHeader>
         <SidebarContent className="justify-center">
           <SidebarGroup>
@@ -78,12 +91,15 @@ export default function InsSideBar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild className="hover:bg-black/10">
-                    <div className="group-data-[collapsible=icon]:size-10! h-12 cursor-pointer">
+                    <NavLink
+                      to={"/chat"}
+                      className="group-data-[collapsible=icon]:size-10! h-12 cursor-pointer"
+                    >
                       <Send style={{ width: 24, height: 24 }} />
                       <span className="ml-1 text-base font-normal text-(--text-primary)">
                         Tin nhắn
                       </span>
-                    </div>
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>

@@ -23,4 +23,9 @@ export const UserPostsCache = {
 };
 export const UserProfile = {
   profile: ["profile"],
+  update: ["update"],
+};
+
+export const ChatsCache = {
+  list: ["chats"],
 };

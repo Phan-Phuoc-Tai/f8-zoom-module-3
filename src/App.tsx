@@ -10,6 +10,8 @@ import AuthMiddleware from "./middlewares/AuthMiddleware";
 import ForgotPasswordPage from "./pages/ForgotPassPage";
 import ForgotPassTokenPage from "./pages/ForgotPassTokenPage";
 import User from "./pages/User";
+import Profile from "./pages/Profile";
+import ChatPage from "./pages/ChatPage";
 
 export default function App() {
   return (
@@ -31,6 +33,8 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/user/:userId" element={<User />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/chat" element={<ChatPage />} />
           </Route>
         </Route>
       </Routes>

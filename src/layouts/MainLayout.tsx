@@ -20,9 +20,10 @@ export default function MainLayout() {
       behavior: "smooth",
     });
   }, [pathname]);
+  const isOpen = pathname !== "/chat" ? true : false;
   return (
     <div className="flex">
-      <SidebarProvider defaultOpen={true} className="w-max gap-0">
+      <SidebarProvider open={isOpen} className="w-max gap-0">
         <InsSideBar />
       </SidebarProvider>
       <Outlet />

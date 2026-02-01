@@ -74,6 +74,7 @@ export default function CreatePost({ setOpenCreatePost }: Props) {
         .then(() => setOpenCreatePost(false));
     }
   };
+
   return (
     <Dialog defaultOpen={true}>
       <DialogContent className="bg-[#e9e9e9] border-none outline-none p-0 max-w-172 h-160 flex flex-col gap-0">
