@@ -63,3 +63,35 @@ export function formatTimeChat(createAt: string | Date): string | undefined {
     return `${month} tháng`;
   }
 }
+
+export function formatTimeMessage(createAt: string | Date): string | undefined {
+  const date = new Date(createAt);
+  const now = new Date();
+
+  const ms = now.getTime() - date.getTime();
+  const second = Math.floor(ms / 1000);
+
+  if (second < 60) {
+    return "Vừa xong";
+  }
+
+  const minus = Math.floor(second / 60);
+  if (minus < 60) {
+    return `${minus} phút trước`;
+  }
+
+  const day = date.toDateString() === now.toDateString();
+
+  if (day) {
+    return date.toLocaleTimeString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  return date.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}

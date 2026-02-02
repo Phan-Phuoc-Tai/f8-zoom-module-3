@@ -1,8 +1,9 @@
 import { createContext } from "react";
-import type { conversationType } from "../stores/chatStore";
+import type { ConversationType, MessageType } from "../stores/chatStore";
 
 interface ChatContextType {
-  conversation: conversationType;
+  conversation?: ConversationType;
+  message?: MessageType;
 }
 
 export const ChatContext = createContext<ChatContextType | null>(null);

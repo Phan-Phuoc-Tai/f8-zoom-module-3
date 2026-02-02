@@ -27,5 +27,6 @@ export const UserProfile = {
 };
 
 export const ChatsCache = {
-  list: ["chats"],
+  conversations: ["conversations"],
+  messages: ["messages"],
 };

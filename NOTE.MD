@@ -32,6 +32,12 @@
 
 # 1/1
 
+- commit-7th: update profile, UI chat, conservations
+
+# 2/1
+
+- commit-8th: UI chat, send Image/Text. pending socket.io
+
 1. Luồng chat real-time
 
 - Giao thức http
@@ -58,7 +64,7 @@ client 3
   - Khi client A muốn gửi tin nhắn cho client B:
     - **Kiểm tra xem A và B có cuộc hội thoại chung với nhau chưa**, nếu chưa thì tạo mới cuộc hội thoại, nếu rồi thì lấy ra cuộc hội thoại đó(client)
       - Sử dụng API Create or Get/...conversations
-    - **Lấy ra tấ cả tin nhắn** trong cuộc hội thoại đó(Client)
+    - **Lấy ra tất cả tin nhắn** trong cuộc hội thoại đó(Client)
       - Sử dụng API Get message in conversations
     - **Gửi tin nhắn** text hoặc file từ A tới B (Client)
       - Sử dụng API send Text message, set Image Message

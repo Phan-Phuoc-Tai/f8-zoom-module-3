@@ -1,6 +1,6 @@
 import { ChatContext } from "../../contexts/ChatContext";
 import { useChatStore } from "../../stores/chatStore";
-import Conversation from "../children/chat/conversation";
+import Conversation from "../children/chat/Conversation";
 
 export default function Conversations() {
   const { conversations } = useChatStore();

@@ -2,26 +2,33 @@ import { use } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ChatContext } from "../../../contexts/ChatContext";
 import { useAuthStore } from "../../../stores/authStore";
-import type { participantType } from "../../../stores/chatStore";
+import { useChatStore, type participantType } from "../../../stores/chatStore";
 import { formatTimeChat } from "../../../tools/formatTime";
 
 export default function Conversation() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const context = use(ChatContext);
   const conversation = context?.conversation;
-  const { lastMessage, unreadCount } = conversation!;
+  const { lastMessage, unreadCount, _id: conversationId } = conversation!;
   const { user } = useAuthStore();
   const myFriend = conversation!.participants.filter(
     (participant: participantType) => participant._id !== user?._id,
   );
   const isMyLastMessage = lastMessage.senderId === user?._id ? true : false;
   const isSendText = lastMessage.messageType === "text" ? true : false;
-  console.log(conversation);
   const { profilePicture, username } = myFriend[0];
-
+  const { getMessageInConversation } = useChatStore();
+  const handleGetMessage = () => {
+    if (getMessageInConversation && conversationId) {
+      getMessageInConversation(conversationId);
+    }
+  };
   return (
     <>
-      <div className="px-6 py-2.5 flex items-center gap-3 hover:bg-gray-100 cursor-pointer">
+      <div
+        onClick={handleGetMessage}
+        className="px-6 py-2.5 flex items-center gap-3 hover:bg-gray-100 cursor-pointer"
+      >
         <Avatar className="size-11 flex items-center justify-center bg-gray-500 rounded-full overflow-hidden">
           {profilePicture! && (
             <AvatarImage

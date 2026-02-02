@@ -36,8 +36,6 @@ import SidebarProfile from "../children/sidebar/SidebarProfile";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import CreatePost from "../children/post/CreatePost";
-import { cn } from "../../lib/utils";
-
 export default function InsSideBar() {
   const { sidebarMores, sidebarMetas } = useSidebarStore();
   const { isLoading, logout } = useAuthStore();
