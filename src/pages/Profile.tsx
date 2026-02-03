@@ -6,7 +6,6 @@ import { Spinner } from "../components/ui/spinner";
 import { cn } from "../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formUpdateProfile } from "../schemas/formUpdateProfile";
-import { useUserStore } from "../stores/userStore";
 import {
   Select,
   SelectContent,

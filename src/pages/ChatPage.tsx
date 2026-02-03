@@ -18,7 +18,7 @@ export default function ChatPage() {
   const queryClient = useQueryClient();
   const { conversations, IdConversationActive, getConversations } =
     useChatStore();
-  const { data } = useQuery({
+  const { data: _data } = useQuery({
     queryKey: ChatsCache.conversations,
     queryFn: getConversations,
   });
