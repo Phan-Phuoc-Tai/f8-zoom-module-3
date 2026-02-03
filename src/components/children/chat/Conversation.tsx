@@ -17,16 +17,16 @@ export default function Conversation() {
   const isMyLastMessage = lastMessage.senderId === user?._id ? true : false;
   const isSendText = lastMessage.messageType === "text" ? true : false;
   const { profilePicture, username } = myFriend[0];
-  const { getMessageInConversation } = useChatStore();
-  const handleGetMessage = () => {
-    if (getMessageInConversation && conversationId) {
-      getMessageInConversation(conversationId);
+  const { getIdConversationActive } = useChatStore();
+  const handleSetConversationId = () => {
+    if (getIdConversationActive && conversationId) {
+      getIdConversationActive(conversationId);
     }
   };
   return (
     <>
       <div
-        onClick={handleGetMessage}
+        onClick={handleSetConversationId}
         className="px-6 py-2.5 flex items-center gap-3 hover:bg-gray-100 cursor-pointer"
       >
         <Avatar className="size-11 flex items-center justify-center bg-gray-500 rounded-full overflow-hidden">

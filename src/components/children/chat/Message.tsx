@@ -9,7 +9,7 @@ export default function Message() {
   const message = context?.message;
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const { user } = useAuthStore();
-  const isOwner = message?.senderId._id === user?._id ? true : false;
+  const isOwner = message?.senderId?._id === user?._id ? true : false;
   const { senderId, content, messageType, imageUrl } = message!;
   const isImageType = messageType === "image" ? true : false;
   const { profilePicture, username } = senderId!;

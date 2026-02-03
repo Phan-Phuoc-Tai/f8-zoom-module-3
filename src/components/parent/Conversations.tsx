@@ -1,21 +1,29 @@
+import { useQuery } from "@tanstack/react-query";
+import { ChatsCache } from "../../cache/Cache";
 import { ChatContext } from "../../contexts/ChatContext";
-import { useChatStore } from "../../stores/chatStore";
+import { useChatStore, type ConversationType } from "../../stores/chatStore";
 import Conversation from "../children/chat/Conversation";
 
 export default function Conversations() {
-  const { conversations } = useChatStore();
+  const { getConversations } = useChatStore();
+  const { data: conversations } = useQuery<ConversationType[]>({
+    queryKey: ChatsCache.conversations,
+    queryFn: getConversations,
+  });
+
   return (
     <>
-      {conversations.map((conversation, index) => (
-        <ChatContext.Provider
-          key={index}
-          value={{
-            conversation,
-          }}
-        >
-          <Conversation />
-        </ChatContext.Provider>
-      ))}
+      {conversations &&
+        conversations.map((conversation, index) => (
+          <ChatContext.Provider
+            key={index}
+            value={{
+              conversation,
+            }}
+          >
+            <Conversation />
+          </ChatContext.Provider>
+        ))}
     </>
   );
 }

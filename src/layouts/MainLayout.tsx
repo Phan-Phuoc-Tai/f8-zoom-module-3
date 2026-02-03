@@ -5,6 +5,7 @@ import { useAuthStore } from "../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { Profile } from "../cache/Cache";
 import { useEffect } from "react";
+import { socket } from "../socket/socket";
 
 export default function MainLayout() {
   const { getProfile } = useAuthStore();
@@ -15,6 +16,9 @@ export default function MainLayout() {
     retry: 2,
   });
   useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Connected to chat server");
+    });
     window.scrollTo({
       top: 0,
       behavior: "smooth",

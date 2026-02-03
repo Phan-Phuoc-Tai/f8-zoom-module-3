@@ -38,6 +38,10 @@
 
 - commit-8th: UI chat, send Image/Text. pending socket.io
 
+# 3/1
+
+- commit-9th: socket new_message, typing, user-typing
+
 1. Luồng chat real-time
 
 - Giao thức http

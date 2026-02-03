@@ -44,16 +44,19 @@ interface ChatType {
   isLoading: boolean;
   conversations: ConversationType[];
   messages: MessageType[];
-  getConversations: () => void;
-  getMessageInConversation: (conversationId: string) => void;
+  IdConversationActive: string;
+  getConversations: () => Promise<ConversationType[]>;
+  getMessageInConversation: (conversationId: string) => Promise<MessageType[]>;
   sendTextMessage: (msgData: MessageType) => Promise<MessageType>;
   sendImageMessage: (file: File, msgData: MessageType) => Promise<MessageType>;
+  getIdConversationActive: (conversationId: string) => void;
 }
 
 export const useChatStore = create<ChatType>()((set) => ({
   isLoading: false,
   conversations: [],
   messages: [],
+  IdConversationActive: "",
   getConversations: async () => {
     try {
       set({ isLoading: true });
@@ -149,5 +152,10 @@ export const useChatStore = create<ChatType>()((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+  getIdConversationActive: (conversationId) => {
+    return set({
+      IdConversationActive: conversationId,
+    });
   },
 }));

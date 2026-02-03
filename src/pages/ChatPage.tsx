@@ -1,36 +1,71 @@
 import { MessageCircle, MessageCircleMore, SquarePen } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useAuthStore } from "../stores/authStore";
-import { useChatStore } from "../stores/chatStore";
+import {
+  useChatStore,
+  type ConversationType,
+  type MessageType,
+} from "../stores/chatStore";
 import Conversations from "../components/parent/Conversations";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChatsCache } from "../cache/Cache";
 import ChatSpace from "../components/children/chat/ChatSpace";
+import { socket } from "../socket/socket";
 import { useEffect } from "react";
 
-import { socket } from "../socket/socket";
 export default function ChatPage() {
   const { user } = useAuthStore();
-  const {
-    conversations,
-    messages,
-    getConversations,
-    getMessageInConversation,
-  } = useChatStore();
+  const queryClient = useQueryClient();
+  const { conversations, IdConversationActive, getConversations } =
+    useChatStore();
   const { data } = useQuery({
     queryKey: ChatsCache.conversations,
     queryFn: getConversations,
   });
-
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to chat server");
-      socket.on("new_message", (message) => {
-        getMessageInConversation(message?.conversationId);
-        getConversations();
-      });
+    socket.on("new_message", (message) => {
+      console.log(message);
+      //update messages with new message
+      queryClient.setQueryData(
+        [...ChatsCache.messages, IdConversationActive],
+        (oldData: MessageType[]) => {
+          return oldData ? [...oldData, message] : [message];
+        },
+      );
+      //update conversations with new message
+      queryClient.setQueryData(
+        ChatsCache.conversations,
+        (oldData: ConversationType[]) => {
+          const conversationIdActive = conversations.find(
+            (conversation) => conversation._id === IdConversationActive,
+          );
+          const lastMessage = conversationIdActive?.lastMessage;
+          let unreadCount = conversationIdActive?.unreadCount;
+          return oldData?.map((conversation) => {
+            if (conversation._id === IdConversationActive) {
+              const result = {
+                ...conversation,
+                lastMessage: {
+                  ...lastMessage,
+                  content: message.content,
+                  createdAt: message.createdAt,
+                  senderId: message.senderId._id,
+                  isRead: message.isRead,
+                  messageType: message.messageType,
+                },
+                unreadCount: ++unreadCount!,
+              };
+              return result;
+            }
+          });
+        },
+      );
     });
-  }, []);
+
+    return () => {
+      socket.off("new_message");
+    };
+  }, [IdConversationActive, queryClient]);
   return (
     <div className="flex w-full">
       <div className="w-100 border-r border-[#ddd] ml-3 shrink-0">
@@ -69,7 +104,7 @@ export default function ChatPage() {
           <Conversations />
         )}
       </div>
-      {!messages.length ? (
+      {!IdConversationActive ? (
         <div className="flex items-center justify-center flex-col py-12 w-full">
           <div className=" text-black/20">
             <MessageCircleMore style={{ width: 96, height: 96 }} />

@@ -5,13 +5,20 @@ import { cn } from "../../../lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formMsgSchema } from "../../../schemas/formMsgSchema";
-import { useChatStore } from "../../../stores/chatStore";
+import {
+  useChatStore,
+  type ConversationType,
+  type MessageType,
+} from "../../../stores/chatStore";
 import { Spinner } from "../../ui/spinner";
 import { useAuthStore } from "../../../stores/authStore";
 
 import { socket } from "../../../socket/socket";
+import { useQueryClient } from "@tanstack/react-query";
+import { ChatsCache } from "../../../cache/Cache";
 export default function SendMessage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [msg, setMsg] = useState("");
@@ -22,7 +29,8 @@ export default function SendMessage() {
   const {
     isLoading,
     messages,
-    getMessageInConversation,
+    IdConversationActive,
+    conversations,
     sendImageMessage,
     sendTextMessage,
   } = useChatStore();
@@ -35,13 +43,29 @@ export default function SendMessage() {
     setFile(selectedFile);
   };
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const myFriend = messages.find(
     (message) => message?.senderId?._id !== user?._id,
   );
   const { conversationId, senderId } = myFriend!;
 
   const handleChangeMsg = (e: React.InputEvent<HTMLInputElement>) => {
-    setMsg(e.currentTarget.value);
+    const value = e.currentTarget.value;
+
+    socket.emit("typing", {
+      conversationId: conversationId,
+      recipientId: senderId?._id,
+    });
+    setMsg(value);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stop-typing", {
+        conversationId: conversationId,
+        recipientId: senderId?._id,
+      });
+    }, 500);
   };
   const handleCancelPreview = () => {
     const url = URL.createObjectURL(file!);
@@ -62,7 +86,40 @@ export default function SendMessage() {
           Object.assign(msgData, {
             messageType: "image",
           }),
-        ).then(() => {
+        ).then((message) => {
+          queryClient.setQueryData(
+            [...ChatsCache.messages, IdConversationActive],
+            (oldData: MessageType[]) => {
+              return oldData ? [...oldData, message] : [message];
+            },
+          );
+          queryClient.setQueryData(
+            ChatsCache.conversations,
+            (oldData: ConversationType[]) => {
+              const conversationIdActive = conversations.find(
+                (conversation) => conversation._id === IdConversationActive,
+              );
+              const lastMessage = conversationIdActive?.lastMessage;
+              let unreadCount = conversationIdActive?.unreadCount;
+              return oldData?.map((conversation) => {
+                if (conversation._id === IdConversationActive) {
+                  const result = {
+                    ...conversation,
+                    lastMessage: {
+                      ...lastMessage,
+                      content: message.content,
+                      createdAt: message.createdAt,
+                      senderId: message?.senderId?._id,
+                      isRead: message.isRead,
+                      messageType: message.messageType,
+                    },
+                    unreadCount: ++unreadCount!,
+                  };
+                  return result;
+                }
+              });
+            },
+          );
           setFile(null);
           setPreviewUrl(null);
         });
@@ -72,7 +129,40 @@ export default function SendMessage() {
           Object.assign(msgData, {
             messageType: "text",
           }),
-        ).then(() => {
+        ).then((message) => {
+          queryClient.setQueryData(
+            [...ChatsCache.messages, IdConversationActive],
+            (oldData: MessageType[]) => {
+              return oldData ? [...oldData, message] : [message];
+            },
+          );
+          queryClient.setQueryData(
+            ChatsCache.conversations,
+            (oldData: ConversationType[]) => {
+              const conversationIdActive = conversations.find(
+                (conversation) => conversation._id === IdConversationActive,
+              );
+              const lastMessage = conversationIdActive?.lastMessage;
+              let unreadCount = conversationIdActive?.unreadCount;
+              return oldData?.map((conversation) => {
+                if (conversation._id === IdConversationActive) {
+                  const result = {
+                    ...conversation,
+                    lastMessage: {
+                      ...lastMessage,
+                      content: message.content,
+                      createdAt: message.createdAt,
+                      senderId: message?.senderId?._id,
+                      isRead: message.isRead,
+                      messageType: message.messageType,
+                    },
+                    unreadCount: ++unreadCount!,
+                  };
+                  return result;
+                }
+              });
+            },
+          );
           setMsg("");
         });
       }
