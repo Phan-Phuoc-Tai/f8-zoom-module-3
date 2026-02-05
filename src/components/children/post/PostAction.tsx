@@ -117,11 +117,11 @@ export default function PostAction() {
         )}
         {!isOwner && (
           <>
-            <p className="text-xl py-2 text-red-500 hover:bg-black/10 w-full text-center border-b border-black/10">
+            <p className="text-xl py-2 text-red-500 hover:bg-black/10 w-full text-center border-b border-black/10 cursor-pointer">
               Báo cáo
             </p>
             <p
-              className="text-xl py-2 hover:bg-black/10 w-full text-center"
+              className="text-xl py-2 hover:bg-black/10 w-full text-center cursor-pointer"
               onClick={handleCloseModal}
             >
               Huỷ
