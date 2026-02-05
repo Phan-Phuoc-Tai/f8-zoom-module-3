@@ -49,13 +49,13 @@ export default function SendMessage() {
   );
 
   const conversationId = myFriend?.conversationId || "";
-  const senderId = myFriend?.senderId || "";
+  const senderId = myFriend?.senderId?._id || "";
   const handleChangeMsg = (e: React.InputEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
 
     socket.emit("typing", {
       conversationId: conversationId,
-      recipientId: senderId?._id,
+      recipientId: senderId,
     });
     setMsg(value);
     if (typingTimeoutRef.current) {
@@ -64,7 +64,7 @@ export default function SendMessage() {
     typingTimeoutRef.current = setTimeout(() => {
       socket.emit("stop-typing", {
         conversationId: conversationId,
-        recipientId: senderId?._id,
+        recipientId: senderId,
       });
     }, 1000);
   };
@@ -78,7 +78,7 @@ export default function SendMessage() {
     if (senderId) {
       const msgData = {
         conversationId: conversationId,
-        recipientId: senderId?._id,
+        recipientId: senderId,
         content: data.msg,
       };
       if (file) {

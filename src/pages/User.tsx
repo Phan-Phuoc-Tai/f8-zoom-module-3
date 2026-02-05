@@ -1,7 +1,5 @@
 import { NavLink, useParams } from "react-router-dom";
 import { useUserStore } from "../stores/userStore";
-import { useQuery } from "@tanstack/react-query";
-import { UserPostsCache, UserProfile } from "../cache/Cache";
 import LoadingUserProfile from "../tools/LoadingUserProfile";
 import { Button } from "../components/ui/button";
 import {
