@@ -58,6 +58,7 @@ export default function ChatPage() {
               };
               return result;
             }
+            return conversation;
           });
         },
       );

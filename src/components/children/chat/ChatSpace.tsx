@@ -48,9 +48,12 @@ export default function ChatSpace() {
         });
       },
     );
-    socket.on("user_stop_typing", (data: { userId: string }) => {
-      setTypingUsers((prev) => prev.filter((u) => u.userId !== data.userId));
-    });
+    socket.on(
+      "user_stop_typing",
+      (data: { conversationId: string; userId: string }) => {
+        setTypingUsers((prev) => prev.filter((u) => u.userId !== data.userId));
+      },
+    );
 
     return () => {
       socket.off("user_typing");

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "../components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "../components/ui/field";
 import { Input } from "../components/ui/input";
@@ -9,7 +9,6 @@ import { formUpdateProfile } from "../schemas/formUpdateProfile";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -19,7 +18,6 @@ import { useAuthStore, type FormUpdateProfile } from "../stores/authStore";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 
 export default function Profile() {
-  const [alignItemWithTrigger] = useState(true);
   const { user, handleUpdateProfile, isLoading } = useAuthStore();
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -27,8 +25,9 @@ export default function Profile() {
   const {
     handleSubmit,
     register,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
+    control,
   } = useForm({
     resolver: zodResolver(formUpdateProfile),
     mode: "onChange",
@@ -194,41 +193,42 @@ export default function Profile() {
               <FieldLabel htmlFor="gender" className="text-lg">
                 Giới tính
               </FieldLabel>
-              <Select defaultValue={user?.gender} {...register("gender")}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent
-                  position={alignItemWithTrigger ? "item-aligned" : "popper"}
-                >
-                  <SelectGroup>
-                    <SelectItem value="male">Nam</SelectItem>
-                    <SelectItem value="female">Nữ</SelectItem>
-                    <SelectItem value="other">Khác</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Chọn giới tính" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">Nam</SelectItem>
+                      <SelectItem value="female">Nữ</SelectItem>
+                      <SelectItem value="other">Khác</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </Field>
 
-            {isLoading ? (
-              <Button
-                type="submit"
-                size={null}
-                disabled={isLoading}
-                className="mt-3 bg-blue-600/90 text-base p-2 h-auto hover:bg-blue-700 cursor-pointer"
-              >
-                <Spinner /> Đang lưu thay đổi...
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                size={null}
-                disabled={!isValid}
-                className="mt-3 bg-blue-600/90 text-base p-2 h-auto hover:bg-blue-700 cursor-pointer"
-              >
-                Lưu thay đổi
-              </Button>
-            )}
+            <Button
+              type="submit"
+              size={null}
+              disabled={isLoading}
+              className="mt-3 bg-blue-600/90 text-base p-2 h-auto hover:bg-blue-700 cursor-pointer"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner /> Đang lưu thay đổi...
+                </>
+              ) : (
+                "Lưu thay đổi"
+              )}
+            </Button>
           </FieldGroup>
         </form>
       </div>

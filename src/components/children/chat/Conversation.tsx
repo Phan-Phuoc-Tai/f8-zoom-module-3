@@ -20,12 +20,15 @@ export default function Conversation() {
   const myFriend = participants!.filter(
     (participant: participantType) => participant._id !== user?._id,
   );
-  if (!myFriend.length) {
-    return;
-  }
+  // if (!myFriend.length) {
+  //   return;
+  // }
   const isMyLastMessage = lastMessage?.senderId === user?._id ? true : false;
   const isSendText = lastMessage?.messageType === "text" ? true : false;
-  const { profilePicture, username } = myFriend[0];
+  const { profilePicture, username } = myFriend[0] || {
+    profilePicture: null,
+    username: "Người dùng không tồn tại",
+  };
 
   const handleSetConversationId = () => {
     if (getIdConversationActive && conversationId) {

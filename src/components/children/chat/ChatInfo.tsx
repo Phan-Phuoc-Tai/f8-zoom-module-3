@@ -14,11 +14,15 @@ export default function ChatInfo() {
   const myFriend = participants!.find(
     (participant) => participant?._id !== user?._id,
   );
-  const { username, fullName, profilePicture } = myFriend! || "";
+  const { username, fullName, profilePicture } = myFriend! || {
+    profilePicture: null,
+    fullName: "Người dùng không tồn tại",
+    username: "",
+  };
 
   return (
     <div className="px-4 pt-5 pb-3 flex items-center gap-3 border-b border-[#ddd]">
-      <Avatar className="size-11 flex items-center justify-center bg-gray-500 rounded-full overflow-hidden">
+      <Avatar className="size-11 flex items-center justify-center  rounded-full overflow-hidden">
         {profilePicture! && (
           <AvatarImage
             src={`${baseUrl}${profilePicture}`}
@@ -27,7 +31,9 @@ export default function ChatInfo() {
         )}
 
         <AvatarFallback className="font-medium text-black/80">
-          {username ? username.charAt(0).toUpperCase() : ""}
+          {username
+            ? username.charAt(0).toUpperCase()
+            : fullName.charAt(0).toUpperCase()}
         </AvatarFallback>
       </Avatar>
       <div>

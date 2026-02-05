@@ -12,7 +12,10 @@ export default function Message() {
   const isOwner = message?.senderId?._id === user?._id ? true : false;
   const { senderId, content, messageType, imageUrl } = message!;
   const isImageType = messageType === "image" ? true : false;
-  const { profilePicture, username } = senderId!;
+  const { profilePicture, username } = senderId! || {
+    profilePicture: null,
+    username: "Người dùng không tồn tại",
+  };
   return (
     <div
       className={cn(
