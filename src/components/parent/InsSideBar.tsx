@@ -36,10 +36,12 @@ import SidebarProfile from "../children/sidebar/SidebarProfile";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import CreatePost from "../children/post/CreatePost";
+import SearchUser from "../children/SearchUser";
 export default function InsSideBar() {
   const { sidebarMores, sidebarMetas } = useSidebarStore();
   const { isLoading, logout } = useAuthStore();
   const [openCreatePost, setOpenCreatePost] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
   const handleLogout = () => {
     if (logout) {
       logout();
@@ -102,7 +104,10 @@ export default function InsSideBar() {
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild className="hover:bg-black/10">
-                    <div className="group-data-[collapsible=icon]:size-10! h-12 cursor-pointer">
+                    <div
+                      onClick={() => setOpenSearch(true)}
+                      className="group-data-[collapsible=icon]:size-10! h-12 cursor-pointer"
+                    >
                       <Search style={{ width: 24, height: 24 }} />
                       <span className="ml-1 text-base font-normal text-(--text-primary)">
                         Tìm kiếm
@@ -232,6 +237,7 @@ export default function InsSideBar() {
         </SidebarFooter>
       </Sidebar>
       {openCreatePost && <CreatePost setOpenCreatePost={setOpenCreatePost} />}
+      {openSearch && <SearchUser setOpenSearch={setOpenSearch} />}
     </>
   );
 }

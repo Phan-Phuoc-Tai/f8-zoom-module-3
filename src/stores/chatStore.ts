@@ -50,6 +50,7 @@ interface ChatType {
   sendTextMessage: (msgData: MessageType) => Promise<MessageType>;
   sendImageMessage: (file: File, msgData: MessageType) => Promise<MessageType>;
   getIdConversationActive: (conversationId: string) => void;
+  createOrGetConversation: (userId: string) => Promise<ConversationType>;
 }
 
 export const useChatStore = create<ChatType>()((set) => ({
@@ -157,5 +158,27 @@ export const useChatStore = create<ChatType>()((set) => ({
     return set({
       IdConversationActive: conversationId,
     });
+  },
+  createOrGetConversation: async (userId) => {
+    try {
+      set({
+        isLoading: true,
+      });
+      const response = await HTTP.post(`/api/messages/conversations`, {
+        userId,
+      }).catch((error) => {
+        throw error;
+      });
+      const data = response.data.data;
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      }
+    } finally {
+      set({
+        isLoading: false,
+      });
+    }
   },
 }));

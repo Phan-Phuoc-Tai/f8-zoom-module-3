@@ -104,7 +104,7 @@ export default function PostInfo() {
                 style={{ width: 24, height: 24 }}
               />
             </Button>
-            <p className="font-medium">{likes}</p>
+            <p className="font-medium">{likes && Math.abs(likes)}</p>
           </div>
 
           <div className="comment flex items-center gap-1">

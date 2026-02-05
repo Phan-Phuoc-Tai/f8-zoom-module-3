@@ -47,8 +47,9 @@ export default function SendMessage() {
   const myFriend = messages.find(
     (message) => message?.senderId?._id !== user?._id,
   );
-  const { conversationId, senderId } = myFriend!;
 
+  const conversationId = myFriend?.conversationId || "";
+  const senderId = myFriend?.senderId || "";
   const handleChangeMsg = (e: React.InputEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
 
@@ -65,7 +66,7 @@ export default function SendMessage() {
         conversationId: conversationId,
         recipientId: senderId?._id,
       });
-    }, 500);
+    }, 1000);
   };
   const handleCancelPreview = () => {
     const url = URL.createObjectURL(file!);
@@ -100,7 +101,7 @@ export default function SendMessage() {
                 (conversation) => conversation._id === IdConversationActive,
               );
               const lastMessage = conversationIdActive?.lastMessage;
-              let unreadCount = conversationIdActive?.unreadCount;
+              const unreadCount = conversationIdActive?.unreadCount;
               return oldData?.map((conversation) => {
                 if (conversation._id === IdConversationActive) {
                   const result = {
@@ -113,7 +114,7 @@ export default function SendMessage() {
                       isRead: message.isRead,
                       messageType: message.messageType,
                     },
-                    unreadCount: ++unreadCount!,
+                    unreadCount: unreadCount!,
                   };
                   return result;
                 }
@@ -143,7 +144,7 @@ export default function SendMessage() {
                 (conversation) => conversation._id === IdConversationActive,
               );
               const lastMessage = conversationIdActive?.lastMessage;
-              let unreadCount = conversationIdActive?.unreadCount;
+              const unreadCount = conversationIdActive?.unreadCount;
               return oldData?.map((conversation) => {
                 if (conversation._id === IdConversationActive) {
                   const result = {
@@ -156,7 +157,7 @@ export default function SendMessage() {
                       isRead: message.isRead,
                       messageType: message.messageType,
                     },
-                    unreadCount: ++unreadCount!,
+                    unreadCount: unreadCount!,
                   };
                   return result;
                 }

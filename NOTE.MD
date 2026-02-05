@@ -42,6 +42,14 @@
 
 - commit-9th: socket new_message, typing, user-typing
 
+# 4/1
+
+- UI modal conversation, create conversation, search user, add search history, delete history
+
+# 5/1
+
+- commit-10: clearAll history
+
 1. Luồng chat real-time
 
 - Giao thức http

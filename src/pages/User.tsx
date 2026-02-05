@@ -17,6 +17,7 @@ import { UserContext } from "../contexts/UserContext";
 import { PostUser } from "../components/children/user/PostUser";
 import { cn } from "../lib/utils";
 import { useAuthStore } from "../stores/authStore";
+import { useEffect } from "react";
 export default function User() {
   const {
     isLoading,
@@ -30,26 +31,7 @@ export default function User() {
   const { userId } = useParams();
   const { user: mainUser } = useAuthStore();
   const isOwner = mainUser?._id === userId;
-  console.log(userId, mainUser?._id);
 
-  const { data: _data } = useQuery({
-    queryKey: UserProfile.profile,
-    queryFn: () => {
-      if (getUserById && userId) {
-        return getUserById(userId);
-      }
-    },
-    retry: 2,
-  });
-  const { data: _posts } = useQuery({
-    queryKey: UserPostsCache.list,
-    queryFn: () => {
-      if (getUserPosts && userId) {
-        return getUserPosts(userId);
-      }
-    },
-    retry: 2,
-  });
   const handleGetAllPost = () => {
     if (getUserPosts && userId) {
       getUserPosts(userId);
@@ -65,7 +47,14 @@ export default function User() {
       getUserPosts(userId, "video");
     }
   };
-
+  useEffect(() => {
+    if (getUserById && userId) {
+      getUserById(userId);
+    }
+    if (getUserPosts && userId) {
+      getUserPosts(userId);
+    }
+  }, [userId]);
   return (
     <main className="flex-1 ml-50 py-12">
       <div className="flex items-center justify-center w-6xl px-4">

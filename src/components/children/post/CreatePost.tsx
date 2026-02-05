@@ -76,7 +76,7 @@ export default function CreatePost({ setOpenCreatePost }: Props) {
   };
 
   return (
-    <Dialog defaultOpen={true}>
+    <Dialog defaultOpen={true} onOpenChange={setOpenCreatePost}>
       <DialogContent className="bg-[#e9e9e9] border-none outline-none p-0 max-w-172 h-160 flex flex-col gap-0">
         <DialogHeader className="items-center border-b border-white p-4 h-14">
           <DialogTitle>Tạo bài viết mới</DialogTitle>

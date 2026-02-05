@@ -11,20 +11,21 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChatsCache } from "../cache/Cache";
 import ChatSpace from "../components/children/chat/ChatSpace";
 import { socket } from "../socket/socket";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ModalConversation from "../components/children/chat/ModalConversation";
+import LoadingSearchUser from "../tools/LoadingSearchUser";
 
 export default function ChatPage() {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const { conversations, IdConversationActive, getConversations } =
     useChatStore();
-  const { data: _data } = useQuery({
+  const { data: _data, isLoading } = useQuery({
     queryKey: ChatsCache.conversations,
     queryFn: getConversations,
   });
   useEffect(() => {
     socket.on("new_message", (message) => {
-      console.log(message);
       //update messages with new message
       queryClient.setQueryData(
         [...ChatsCache.messages, IdConversationActive],
@@ -66,9 +67,10 @@ export default function ChatPage() {
       socket.off("new_message");
     };
   }, [IdConversationActive, queryClient]);
+  const [isOpenModal, setOpenModal] = useState(false);
   return (
     <div className="flex w-full">
-      <div className="w-100 border-r border-[#ddd] ml-3 shrink-0">
+      <div className="w-100 border-r border-[#ddd] ml-3 shrink-0 overflow-y-auto">
         <div className="p-5">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-medium text-[#353535]">
@@ -77,6 +79,7 @@ export default function ChatPage() {
             <Button
               size={null}
               className="bg-white text-black hover:bg-transparent hover:text-black/60 cursor-pointer"
+              onClick={() => setOpenModal(true)}
             >
               <SquarePen style={{ width: 24, height: 24 }} />
             </Button>
@@ -88,7 +91,11 @@ export default function ChatPage() {
           />
         </div>
         <div className="mb-2 px-6 font-semibold">Tin nhắn</div>
-        {!conversations.length ? (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <LoadingSearchUser key={index} />
+          ))
+        ) : !conversations.length ? (
           <div className="flex items-center justify-center flex-col gap-3 py-12">
             <div className=" text-black/20">
               <MessageCircle style={{ width: 40, height: 40 }} />
@@ -96,7 +103,10 @@ export default function ChatPage() {
             <p className="text-black/30 font-medium text-sm">
               Bạn chưa có cuộc trò chuyện nào
             </p>
-            <p className="font-medium text-blue-500 text-sm cursor-pointer hover:underline">
+            <p
+              onClick={() => setOpenModal(true)}
+              className="font-medium text-blue-500 text-sm cursor-pointer hover:underline"
+            >
               Bắt đầu trò chuyện
             </p>
           </div>
@@ -115,13 +125,17 @@ export default function ChatPage() {
           <p className="text-black/30 font-medium text-sm">
             Gửi ảnh và tin nhắn riêng tư cho bạn bè hoặc nhóm
           </p>
-          <Button className="bg-blue-500 mt-5 font-medium text-white/90 cursor-pointer hover:bg-blue-600 hover:text-white">
+          <Button
+            onClick={() => setOpenModal(true)}
+            className="bg-blue-500 mt-5 font-medium text-white/90 cursor-pointer hover:bg-blue-600 hover:text-white"
+          >
             Gửi tin nhắn
           </Button>
         </div>
       ) : (
         <ChatSpace />
       )}
+      {isOpenModal && <ModalConversation setOpenModal={setOpenModal} />}
     </div>
   );
 }

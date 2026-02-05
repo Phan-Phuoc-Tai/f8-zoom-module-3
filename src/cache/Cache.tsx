@@ -30,3 +30,11 @@ export const ChatsCache = {
   conversations: ["conversations"],
   messages: ["messages"],
 };
+
+export const SearchUserCache = {
+  list: ["searchUsers"],
+};
+
+export const HistorySearchUserCache = {
+  list: ["historySearchUsers"],
+};

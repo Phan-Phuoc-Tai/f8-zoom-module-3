@@ -22,12 +22,13 @@ export default function ChatSpace() {
   const conversationIdActive = conversations.find(
     (conversation) => conversation._id === IdConversationActive,
   );
-  const participants = conversationIdActive?.participants;
+  const participants = conversationIdActive?.participants || [];
   const myFriend = participants!.find(
     (participant) => participant?._id !== user?._id,
   );
   const baseUrl = import.meta.env.VITE_BASE_URL;
-  const { username, profilePicture } = myFriend!;
+  const { username, profilePicture } = myFriend! || "";
+
   const { data: messages } = useQuery<MessageType[]>({
     queryKey: [...ChatsCache.messages, IdConversationActive],
     queryFn: async () => getMessageInConversation(IdConversationActive),

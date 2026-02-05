@@ -10,11 +10,11 @@ export default function ChatInfo() {
   const conversationIdActive = conversations.find(
     (conversation) => conversation._id === IdConversationActive,
   );
-  const participants = conversationIdActive?.participants;
+  const participants = conversationIdActive?.participants || [];
   const myFriend = participants!.find(
     (participant) => participant?._id !== user?._id,
   );
-  const { username, fullName, profilePicture } = myFriend!;
+  const { username, fullName, profilePicture } = myFriend! || "";
 
   return (
     <div className="px-4 pt-5 pb-3 flex items-center gap-3 border-b border-[#ddd]">
@@ -27,7 +27,7 @@ export default function ChatInfo() {
         )}
 
         <AvatarFallback className="font-medium text-black/80">
-          {username.charAt(0).toUpperCase()}
+          {username ? username.charAt(0).toUpperCase() : ""}
         </AvatarFallback>
       </Avatar>
       <div>

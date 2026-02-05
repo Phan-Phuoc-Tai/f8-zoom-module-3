@@ -12,7 +12,7 @@ export default function Conversations() {
   });
 
   return (
-    <>
+    <div className="overflow-y-auto max-h-192">
       {conversations &&
         conversations.map((conversation, index) => (
           <ChatContext.Provider
@@ -24,6 +24,6 @@ export default function Conversations() {
             <Conversation />
           </ChatContext.Provider>
         ))}
-    </>
+    </div>
   );
 }
