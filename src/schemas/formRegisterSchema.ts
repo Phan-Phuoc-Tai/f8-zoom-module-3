@@ -27,6 +27,15 @@ export const formRegisterSchema = z
       })
       .min(8, {
         message: "Mật khẩu có ít nhất 8 kí tự",
+      })
+      .refine((password) => /[A-Z]/.test(password), {
+        message: "Mật khẩu phải chứa ít nhất 1 ký tự viết hoa",
+      })
+      .refine((password) => /[a-z]/.test(password), {
+        message: "Mật khẩu phải chứa ít nhất 1 ký tự viết thường",
+      })
+      .refine((password) => /[0-9]/.test(password), {
+        message: "Mật khẩu phải chứa ít nhất 1 chữ số",
       }),
     confirmPassword: z.string().trim(),
   })

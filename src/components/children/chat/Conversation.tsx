@@ -10,20 +10,23 @@ export default function Conversation() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const context = use(ChatContext);
   const conversation = context?.conversation;
-  const {
-    createdAt,
-    lastMessage,
-    unreadCount,
-    _id: conversationId,
-  } = conversation!;
+  const createdAt = conversation?.createdAt;
+  const lastMessage = conversation?.lastMessage;
+  const unreadCount = conversation?.unreadCount;
+  const conversationId = conversation?._id;
   const { user } = useAuthStore();
-  const myFriend = conversation!.participants.filter(
+  const { getIdConversationActive, IdConversationActive } = useChatStore();
+  const participants = conversation?.participants;
+  const myFriend = participants!.filter(
     (participant: participantType) => participant._id !== user?._id,
   );
+  if (!myFriend.length) {
+    return;
+  }
   const isMyLastMessage = lastMessage?.senderId === user?._id ? true : false;
   const isSendText = lastMessage?.messageType === "text" ? true : false;
   const { profilePicture, username } = myFriend[0];
-  const { getIdConversationActive, IdConversationActive } = useChatStore();
+
   const handleSetConversationId = () => {
     if (getIdConversationActive && conversationId) {
       getIdConversationActive(conversationId);
@@ -70,7 +73,7 @@ export default function Conversation() {
             </span>
           </div>
         </div>
-        {unreadCount > 0 && (
+        {unreadCount! > 0 && (
           <div className="flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-xs text-white">
             <span>{unreadCount}</span>
           </div>

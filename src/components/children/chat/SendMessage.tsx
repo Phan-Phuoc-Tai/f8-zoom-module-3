@@ -28,7 +28,6 @@ export default function SendMessage() {
   });
   const {
     isLoading,
-    messages,
     IdConversationActive,
     conversations,
     sendImageMessage,
@@ -44,17 +43,19 @@ export default function SendMessage() {
   };
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
-  const myFriend = messages.find(
-    (message) => message?.senderId?._id !== user?._id,
+  const conversationActive = conversations.find(
+    (conversation) => conversation._id === IdConversationActive,
   );
-
-  const conversationId = myFriend?.conversationId || "";
-  const senderId = myFriend?.senderId?._id || "";
+  const participantsActive = conversationActive?.participants;
+  const myFriend = participantsActive!.find(
+    (participant) => participant?._id !== user?._id,
+  );
+  const senderId = myFriend?._id;
   const handleChangeMsg = (e: React.InputEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
 
     socket.emit("typing", {
-      conversationId: conversationId,
+      conversationId: IdConversationActive,
       recipientId: senderId,
     });
     setMsg(value);
@@ -63,7 +64,7 @@ export default function SendMessage() {
     }
     typingTimeoutRef.current = setTimeout(() => {
       socket.emit("stop-typing", {
-        conversationId: conversationId,
+        conversationId: IdConversationActive,
         recipientId: senderId,
       });
     }, 1000);
@@ -77,8 +78,8 @@ export default function SendMessage() {
   const onSubmit = (data: { msg: string }) => {
     if (senderId) {
       const msgData = {
-        conversationId: conversationId,
-        recipientId: senderId,
+        conversationId: IdConversationActive!,
+        recipientId: senderId!,
         content: data.msg,
       };
       if (file) {
@@ -161,6 +162,7 @@ export default function SendMessage() {
                   };
                   return result;
                 }
+                return conversation;
               });
             },
           );

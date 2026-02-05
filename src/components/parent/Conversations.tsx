@@ -10,7 +10,6 @@ export default function Conversations() {
     queryKey: ChatsCache.conversations,
     queryFn: getConversations,
   });
-
   return (
     <div className="overflow-y-auto max-h-192">
       {conversations &&
