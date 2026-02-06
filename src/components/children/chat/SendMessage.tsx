@@ -119,6 +119,7 @@ export default function SendMessage() {
                   };
                   return result;
                 }
+                return conversation;
               });
             },
           );

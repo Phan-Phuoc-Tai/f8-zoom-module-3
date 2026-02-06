@@ -17,18 +17,23 @@ export default function Conversation() {
   const { user } = useAuthStore();
   const { getIdConversationActive, IdConversationActive } = useChatStore();
   const participants = conversation?.participants;
-  const myFriend = participants!.filter(
-    (participant: participantType) => participant._id !== user?._id,
-  );
-  // if (!myFriend.length) {
-  //   return;
-  // }
+  const myFriend =
+    participants &&
+    participants?.length > 0 &&
+    participants!.filter(
+      (participant: participantType) => participant._id !== user?._id,
+    );
+  console.log(conversation);
+
   const isMyLastMessage = lastMessage?.senderId === user?._id ? true : false;
   const isSendText = lastMessage?.messageType === "text" ? true : false;
-  const { profilePicture, username } = myFriend[0] || {
-    profilePicture: null,
-    username: "Người dùng không tồn tại",
-  };
+  const { profilePicture, username } =
+    myFriend && myFriend.length > 0
+      ? myFriend[0]
+      : {
+          profilePicture: null,
+          username: "Người dùng không tồn tại",
+        };
 
   const handleSetConversationId = () => {
     if (getIdConversationActive && conversationId) {
