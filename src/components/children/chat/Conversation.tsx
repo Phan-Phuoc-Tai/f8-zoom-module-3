@@ -23,7 +23,6 @@ export default function Conversation() {
     participants!.filter(
       (participant: participantType) => participant._id !== user?._id,
     );
-  console.log(conversation);
 
   const isMyLastMessage = lastMessage?.senderId === user?._id ? true : false;
   const isSendText = lastMessage?.messageType === "text" ? true : false;
